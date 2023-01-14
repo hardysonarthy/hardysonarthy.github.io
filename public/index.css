@@ -1,0 +1,13 @@
+.underlined {
+    text-decoration: underline;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+body {
+    background-color: #313133;
+    color: #E0eaf5;
+    font-family: 'Roboto', sans-serif;
+}
