@@ -70,3 +70,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+ul.description-list li {
+  font-size: 14;
+  text-align: justify;
+}

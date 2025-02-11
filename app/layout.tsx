@@ -7,9 +7,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuViewport,
-} from "@/components/ui/navigation-menu";
+} from '@/components/ui/navigation-menu';
 
-import "./globals.css";
+import './globals.css';
+import type React from 'react';
+import NavBar from './components/shared/navbar';
 
 export default function RootLayout({
   children,
@@ -19,28 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta charSet="UTF-8"></meta>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        ></meta>
+        <meta charSet="UTF-8" />
+        <meta title="Hardyson Arthy Robin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Hardyson Arthy anak Robin</title>
       </head>
       <body className="dark">
-        <nav>
-          <NavigationMenu className="flex justify-between w-full sticky top-1 px-4 py-2 end-0">
-            <NavigationMenuList className="flex justify-between">
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <NavigationMenuLink href="/tools/jsontotable">
-                    JSON to Table
-                  </NavigationMenuLink>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </nav>
-        {children}
+        <NavBar />
+        <div className="mt-20 px-2 md:px-14 lg:px-20">{children}</div>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { type ChangeEvent, useRef, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -31,7 +31,7 @@ export default function JsonToTable() {
 
   let maxCount = 0;
 
-  function convertJson(jsonObj: Object, nestCount = 0) {
+  function convertJson(jsonObj: object, nestCount = 0) {
     maxCount = maxCount > nestCount ? maxCount : nestCount;
     const genRows = [];
     for (const [key, value] of Object.entries(jsonObj)) {
@@ -103,17 +103,14 @@ export default function JsonToTable() {
           <TableCell className="border" key={`row-${row.name}-valueType`}>
             {row.valueType}
           </TableCell>
-          <TableCell
-            className="border"
-            key={`row-${row.name}-description`}
-          ></TableCell>
+          <TableCell className="border" key={`row-${row.name}-description`} />
         </TableRow>
       );
     }
     const prependTableCell = [];
     for (let i = 0; i < level; i++) {
       prependTableCell.push(
-        <TableCell key={`row-${parentName}-${row.name}-${i}`}></TableCell>
+        <TableCell key={`row-${parentName}-${row.name}-${i}`} />
       );
     }
     return (
@@ -135,7 +132,7 @@ export default function JsonToTable() {
         <TableCell
           className="border"
           key={`row-${parentName}-${row.name}-description-${level}`}
-        ></TableCell>
+        />
       </TableRow>
     );
   }
@@ -166,19 +163,19 @@ export default function JsonToTable() {
     navigator.clipboard.writeText(copiableTable);
   }
 
-  function generateChildRows(newRow, row) {
-    if (row.child && row.child.length > 0) {
-      const newRowChild = row.child.map((child) => {
-        if (child.child) {
-          return generateChildRows(newRow, child);
-        }
-        return [child.name, child.valueType].join(' ');
-      });
-      console.log(newRowChild);
-      newRow = [newRow, newRowChild.join('\n')].join('\n');
-    }
-    return newRow;
-  }
+  // function generateChildRows(newRow, row) {
+  //   if (row.child && row.child.length > 0) {
+  //     const newRowChild = row.child.map((child) => {
+  //       if (child.child) {
+  //         return generateChildRows(newRow, child);
+  //       }
+  //       return [child.name, child.valueType].join(' ');
+  //     });
+  //     console.log(newRowChild);
+  //     newRow = [newRow, newRowChild.join('\n')].join('\n');
+  //   }
+  //   return newRow;
+  // }
 
   function copyTable() {}
 
@@ -191,6 +188,10 @@ export default function JsonToTable() {
       setMaxCol(maxCount);
       setEnableConvert(true);
     } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        console.error(error.stack);
+      }
       setJsonAlert(true);
       setEnableConvert(false);
     }
@@ -217,7 +218,7 @@ export default function JsonToTable() {
             id="jsonText"
             onChange={onChange}
             className="w-full min-h-80 mt-2"
-          ></Textarea>
+          />
           <Button
             className="button w-full mt-2"
             disabled={!enableConvert}
