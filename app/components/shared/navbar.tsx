@@ -26,11 +26,11 @@ export default function NavBar() {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                      <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[200px] lg:grid-cols-[.75fr_1fr]">
                         <li className="3">
                           <NavigationMenuLink asChild>
                             <a
-                              className="flex md:w-[200px] lg:w-[200px] lg:grid-cols-[.75fr_1fr]"
+                              className="flex md:w-[100px] lg:w-[100px] lg:grid-cols-[.75fr_1fr]"
                               href="/tools/jsontotable"
                             >
                               <p className="text-sm leading-tight">
@@ -42,15 +42,7 @@ export default function NavBar() {
                       </ul>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <Link href="/recipes" legacyBehavior passHref>
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        Recipes
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
+
                   <NavigationMenuItem>
                     <Link href="/recipes" legacyBehavior passHref>
                       <NavigationMenuLink

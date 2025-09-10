@@ -177,7 +177,39 @@ export default function JsonToTable() {
   //   return newRow;
   // }
 
-  function copyTable() {}
+  function copyTable() {
+    const table = tableRef.current;
+    if (!table) {
+      alert('Table not found!');
+      return;
+    }
+
+    // Create a range to select the table's rendered content
+    const range = document.createRange();
+    range.selectNodeContents(table);
+
+    // Remove any existing selections
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    try {
+      // Execute copy command: this copies the rendered fragment to clipboard
+      const successful = document.execCommand('copy');
+      if (successful) {
+        alert(
+          'Rendered table copied! You can paste it into Confluence or any WYSIWYG editor.'
+        );
+      } else {
+        alert('Failed to copy rendered table.');
+      }
+    } catch (err) {
+      alert(`Copy command failed: ${err}`);
+    }
+
+    // Clear selection to clean up UI
+    selection.removeAllRanges();
+  }
 
   function onChange(event: ChangeEvent<HTMLTextAreaElement>) {
     try {
@@ -246,10 +278,10 @@ export default function JsonToTable() {
                 <Button
                   variant="ghost"
                   className="text-sm h-8 px-4"
-                  disabled={true} //{table.length === 0}
+                  disabled={table.length === 0} //{table.length === 0}
                   onClick={copyTable}
                 >
-                  Copy Raw Table (Not available)
+                  Copy Raw Table
                 </Button>
               </div>
             </CardTitle>
