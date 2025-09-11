@@ -160,6 +160,7 @@ export default function OCRApp() {
           data: { text, confidence },
         } = await workerRef.current.recognize(image.file, {
           logger: (m: any) => {
+            console.log(m);
             if (m.status === 'recognizing text') {
               const progress = Math.round(m.progress * 100);
               setImages((prev) =>
@@ -307,14 +308,14 @@ export default function OCRApp() {
   const errorImages = images.filter((img) => img.status === 'error').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br p-1">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold dark:text-white-200 mb-2">
             Offline OCR Scanner
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto">
             Upload multiple images and extract text using advanced OCR
             technology. Everything processes locally - no internet required
             after initial load.
@@ -370,7 +371,7 @@ export default function OCRApp() {
         )}
 
         {/* Upload Area */}
-        <Card className="mb-8">
+        <Card className="mb-3">
           <CardContent className="p-6">
             {/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
             {/** biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -610,7 +611,7 @@ export default function OCRApp() {
         )}
 
         {/* Empty State */}
-        {images.length === 0 && tesseractLoaded && (
+        {images.length === 0 && (
           <Card className="text-center p-12">
             <CardContent>
               <FileImage className="w-16 h-16 text-gray-300 mx-auto mb-4" />
