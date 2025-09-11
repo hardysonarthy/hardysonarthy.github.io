@@ -1,15 +1,15 @@
 'use client';
 
+import Link from 'next/link';
 import {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
   NavigationMenuContent,
+  NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '../ui/navigation-menu';
-import Link from 'next/link';
 
 export default function NavBar() {
   return (
@@ -17,7 +17,12 @@ export default function NavBar() {
       <nav className="fixed bg-slate-500 inset-x-0 top-0 z-50 bg-transparent">
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-14 items-center">
-            <Link href="/" className="flex items-center" prefetch={false} legacyBehavior>
+            <Link
+              href="/"
+              className="flex items-center"
+              prefetch={false}
+              legacyBehavior
+            >
               <span className="stext-white">Hardyson Arthy</span>
             </Link>
             <div className="flex items-center gap-4">

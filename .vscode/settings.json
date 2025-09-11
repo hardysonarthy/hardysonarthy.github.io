@@ -16,5 +16,8 @@
     "editor.formatOnSave": true,
     "prettier.singleQuote": true
   },
-  "css.customData": [".vscode/tailwind.json"]
+  "css.customData": [".vscode/tailwind.json"],
+  "files.associations": {
+     "*.css": "tailwindcss"
+  }
 }
