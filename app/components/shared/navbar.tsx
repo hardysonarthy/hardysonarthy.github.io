@@ -1,63 +1,67 @@
 'use client';
 
+import Link from 'next/link';
 import {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
   NavigationMenuContent,
+  NavigationMenuItem,
   NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from '../ui/navigation-menu';
-import Link from 'next/link';
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 
-export default function NavBar() {
+const Navbar = () => {
   return (
-    <header>
-      <nav className="fixed bg-slate-500 inset-x-0 top-0 z-50 bg-transparent">
-        <div className="w-full max-w-7xl mx-auto px-4">
-          <div className="flex justify-between h-14 items-center">
-            <Link href="/" className="flex items-center" prefetch={false}>
-              <span className="stext-white">Hardyson Arthy</span>
-            </Link>
-            <div className="flex items-center gap-4">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid gap-3 p-4 md:w-[200px] lg:w-[200px] lg:grid-cols-[.75fr_1fr]">
-                        <li className="3">
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="flex md:w-[100px] lg:w-[100px] lg:grid-cols-[.75fr_1fr]"
-                              href="/tools/jsontotable"
-                            >
-                              <p className="text-sm leading-tight">
-                                JSON to Table
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                        </li>
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
+    <header className="py-3 px-6 flex justify-between items-center">
+      <Link
+        href="/"
+        className="flex items-center space-x-2 cursor-pointer text-xl font-bold text-gray-900 dark:text-white"
+      >
+        Hardyson Arthy
+      </Link>
 
-                  <NavigationMenuItem>
-                    <Link href="/recipes" legacyBehavior passHref>
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        Contact Me
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
-          </div>
-        </div>
+      <nav>
+        <NavigationMenu>
+          <NavigationMenuList className="flex space-x-6">
+            {/* Works link */}
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/works"
+                className="cursor-pointer hover:text-primary transition"
+              >
+                Works
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            {/* Tools dropdown */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="flex flex-col p-2">
+                  <li>
+                    <NavigationMenuLink
+                      href="/tools/json-to-table"
+                      className="block px-3 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      JSON to Table
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink
+                      href="/tools/ocr"
+                      className="block px-3 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      ocr
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </nav>
     </header>
   );
-}
+};
+
+export default Navbar;
