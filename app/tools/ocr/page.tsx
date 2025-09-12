@@ -13,19 +13,13 @@ import {
 } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type Tesseract from 'tesseract.js';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
-
-// Tesseract will be loaded from CDN
-declare global {
-  interface Window {
-    Tesseract: any;
-  }
-}
 
 interface ProcessedImage {
   id: string;
@@ -44,7 +38,7 @@ export default function OCRApp() {
   const [workerReady, setWorkerReady] = useState(false);
   const [tesseractLoaded, setTesseractLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const workerRef = useRef<any>(null);
+  const workerRef = useRef<Tesseract.Worker | null>(null);
 
   // Initialize Tesseract worker
   const initializeWorker = useCallback(async () => {
@@ -55,7 +49,7 @@ export default function OCRApp() {
     setIsInitializing(true);
     try {
       const worker = await window.Tesseract.createWorker('eng', 1, {
-        logger: (m: any) => {
+        logger: (m: Tesseract.RecognizeResult) => {
           if (m.status === 'recognizing text') {
             const progress = Math.round(m.progress * 100);
             setImages((prev) =>
@@ -125,6 +119,47 @@ export default function OCRApp() {
 
     setImages((prev) => [...prev, ...newImages]);
   }, []);
+
+  // Handle paste event
+  const handlePaste = useCallback((event: ClipboardEvent) => {
+    const items = event.clipboardData?.items;
+    if (!items) {
+      return;
+    }
+
+    const newImages: ProcessedImage[] = [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const blob = items[i].getAsFile();
+        if (blob) {
+          const id = Math.random().toString(36).substr(2, 9);
+          const preview = URL.createObjectURL(blob);
+          const file = new File([blob], `pasted-image-${id}.png`, {
+            type: 'image/png',
+          });
+          newImages.push({
+            id,
+            file,
+            preview,
+            text: '',
+            confidence: 0,
+            status: 'pending',
+            progress: 0,
+          });
+        }
+      }
+    }
+    if (newImages.length > 0) {
+      setImages((prev) => [...prev, ...newImages]);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('paste', handlePaste);
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, [handlePaste]);
 
   // Process single image with OCR
   const processImage = useCallback(
@@ -246,7 +281,7 @@ export default function OCRApp() {
       .filter((img) => img.status === 'completed' && img.text)
       .map(
         (img, index) =>
-          `=== Image ${index + 1}: ${img.file.name} ===\nConfidence: ${ 
+          `=== Image ${index + 1}: ${img.file.name} ===\nConfidence: ${
             img.confidence
           }%\n\n${img.text}`
       )
@@ -385,7 +420,8 @@ export default function OCRApp() {
                 Upload Images for OCR
               </h3>
               <p className="text-gray-500 mb-4">
-                Drag and drop images here or click to browse
+                Drag and drop images here, click to browse, or paste from
+                clipboard
               </p>
               <p className="text-sm text-gray-400">
                 Supports: JPG, PNG, GIF, BMP, TIFF, WEBP
