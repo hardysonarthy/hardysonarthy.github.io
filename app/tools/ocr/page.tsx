@@ -46,6 +46,35 @@ export default function OCRApp() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const workerRef = useRef<any>(null);
 
+  // Initialize Tesseract worker
+  const initializeWorker = useCallback(async () => {
+    if (workerRef.current || !tesseractLoaded) {
+      return;
+    }
+
+    setIsInitializing(true);
+    try {
+      const worker = await window.Tesseract.createWorker('eng', 1, {
+        logger: (m: any) => {
+          if (m.status === 'recognizing text') {
+            const progress = Math.round(m.progress * 100);
+            setImages((prev) =>
+              prev.map((img) =>
+                img.id === m.jobId ? { ...img, progress } : img
+              )
+            );
+          }
+        },
+      });
+      workerRef.current = worker;
+      setWorkerReady(true);
+    } catch (error) {
+      console.error('Failed to initialize OCR worker:', error);
+    } finally {
+      setIsInitializing(false);
+    }
+  }, [tesseractLoaded]);
+
   // Load Tesseract.js from CDN
   useEffect(() => {
     if (window.Tesseract) {
@@ -54,10 +83,10 @@ export default function OCRApp() {
     }
 
     const script = document.createElement('script');
-    script.src =
-      'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js';
+    script.src = 'https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js';
     script.onload = () => {
       setTesseractLoaded(true);
+      initializeWorker();
     };
     script.onerror = () => {
       console.error('Failed to load Tesseract.js');
@@ -69,25 +98,7 @@ export default function OCRApp() {
         script.parentNode.removeChild(script);
       }
     };
-  }, []);
-
-  // Initialize Tesseract worker
-  const initializeWorker = useCallback(async () => {
-    if (workerRef.current || !tesseractLoaded) {
-      return;
-    }
-
-    setIsInitializing(true);
-    try {
-      const worker = await window.Tesseract.createWorker('eng');
-      workerRef.current = worker;
-      setWorkerReady(true);
-    } catch (error) {
-      console.error('Failed to initialize OCR worker:', error);
-    } finally {
-      setIsInitializing(false);
-    }
-  }, [tesseractLoaded]);
+  }, [initializeWorker]);
 
   // Handle file selection
   const handleFileSelect = useCallback((files: FileList | null) => {
@@ -158,19 +169,7 @@ export default function OCRApp() {
       try {
         const {
           data: { text, confidence },
-        } = await workerRef.current.recognize(image.file, {
-          logger: (m: any) => {
-            console.log(m);
-            if (m.status === 'recognizing text') {
-              const progress = Math.round(m.progress * 100);
-              setImages((prev) =>
-                prev.map((img) =>
-                  img.id === imageId ? { ...img, progress } : img
-                )
-              );
-            }
-          },
-        });
+        } = await workerRef.current.recognize(image.file, { jobId: image.id });
 
         setImages((prev) =>
           prev.map((img) =>
@@ -247,7 +246,7 @@ export default function OCRApp() {
       .filter((img) => img.status === 'completed' && img.text)
       .map(
         (img, index) =>
-          `=== Image ${index + 1}: ${img.file.name} ===\nConfidence: ${
+          `=== Image ${index + 1}: ${img.file.name} ===\nConfidence: ${ 
             img.confidence
           }%\n\n${img.text}`
       )
