@@ -1,8 +1,8 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 'use client';
 
-import { AlertCircle } from 'lucide-react';
-import { type ChangeEvent, useRef, useState } from 'react';
+import Editor from '@monaco-editor/react';
+import { AlertCircle, Copy, FileJson } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Textarea } from '@/components/ui/textarea';
 
 interface TableRowData {
   name: string;
@@ -238,11 +237,14 @@ export default function JsonToTable() {
     selection?.removeAllRanges();
   }
 
-  function onChange(event: ChangeEvent<HTMLTextAreaElement>) {
+  function onChange(value: string | undefined) {
     try {
       setJsonAlert(false);
-      const text = event.target.value;
-      const { genRows, maxCount } = convertJson(JSON.parse(text));
+      if (!value) {
+        setEnableConvert(false);
+        return;
+      }
+      const { genRows, maxCount } = convertJson(JSON.parse(value));
       setRows(genRows);
       setMaxCol(maxCount);
       setEnableConvert(true);
@@ -257,81 +259,125 @@ export default function JsonToTable() {
   }
 
   return (
-    <div className="container space-y-2 mx-auto w-screen h-screen mb-10">
-      <Card className="b">
-        <CardHeader>
-          <CardTitle>JSON</CardTitle>
-          <CardDescription>Input your JSON file here</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {jsonAlert && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Unable to parse JSON!</AlertTitle>
-              <AlertDescription>
-                Please check your JSON formatting.
-              </AlertDescription>
-            </Alert>
-          )}
-          <Textarea
-            id="jsonText"
-            onChange={onChange}
-            className="w-full min-h-80 mt-2"
-          />
-          <Button
-            className="button w-full mt-2"
-            disabled={!enableConvert}
-            onClick={() => onClick()}
-          >
-            Convert
-          </Button>
-        </CardContent>
-      </Card>
-      {table.length > 0 && (
-        <Card className="b h-max">
-          <CardHeader>
-            <CardTitle className="flex justify-between">
-              <div className="">Output Table</div>
-              <div className="space-x-1">
-                <Button
-                  variant="ghost"
-                  className="text-sm h-8 px-4"
-                  disabled={table.length === 0}
-                  onClick={copyTableHTML}
-                >
-                  Copy HTML Table
-                </Button>
+    <div className="container mx-auto max-w-full h-[calc(100vh-10rem)] px-4 py-6">
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <FileJson className="h-8 w-8" />
+          JSON to Type Table Converter
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Convert JSON data to a structured table format with type information
+        </p>
+      </div>
 
-                <Button
-                  variant="ghost"
-                  className="text-sm h-8 px-4"
-                  disabled={table.length === 0} //{table.length === 0}
-                  onClick={copyTable}
-                >
-                  Copy Raw Table
-                </Button>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100%-5rem)]">
+        {/* Left Panel - JSON Input */}
+        <Card className="flex flex-col h-full">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center justify-between">
+              <span>JSON Input</span>
+              <Button
+                size="sm"
+                disabled={!enableConvert}
+                onClick={() => onClick()}
+              >
+                Convert to Table
+              </Button>
             </CardTitle>
+            <CardDescription>
+              Paste your JSON data below. The editor supports syntax
+              highlighting and code folding.
+            </CardDescription>
           </CardHeader>
-          <CardContent id="tableRender">
-            <Table ref={tableRef} className="border border-collapse">
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    className="border"
-                    colSpan={maxCol === 0 ? undefined : maxCol + 1}
-                  >
-                    Key
-                  </TableHead>
-                  <TableHead className="border">Type</TableHead>
-                  <TableHead className="border">Description</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>{table}</TableBody>
-            </Table>
+          <CardContent className="flex-1 flex flex-col min-h-0">
+            {jsonAlert && (
+              <Alert variant="destructive" className="mb-3">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Invalid JSON</AlertTitle>
+                <AlertDescription>
+                  Please check your JSON formatting and try again.
+                </AlertDescription>
+              </Alert>
+            )}
+            <div className="flex-1 border rounded-md overflow-hidden">
+              <Editor
+                height="100%"
+                defaultLanguage="json"
+                defaultValue='{\n  "example": "Paste your JSON here"\n}'
+                theme="vs-dark"
+                onChange={onChange}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: 'on',
+                  roundedSelection: false,
+                  scrollBeyondLastLine: false,
+                  readOnly: false,
+                  automaticLayout: true,
+                  folding: true,
+                  foldingStrategy: 'indentation',
+                  showFoldingControls: 'always',
+                  formatOnPaste: true,
+                  formatOnType: true,
+                }}
+              />
+            </div>
           </CardContent>
         </Card>
-      )}
+
+        {/* Right Panel - Table Output */}
+        <Card className="flex flex-col h-full">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center justify-between">
+              <span>Table Output</span>
+              {table.length > 0 && (
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={copyTableHTML}>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy HTML
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={copyTable}>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Table
+                  </Button>
+                </div>
+              )}
+            </CardTitle>
+            <CardDescription>
+              Structured representation of your JSON schema
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 overflow-auto">
+            {table.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-muted-foreground">
+                <div className="text-center">
+                  <FileJson className="h-12 w-12 mx-auto mb-3 opacity-20" />
+                  <p>No data to display</p>
+                  <p className="text-sm">
+                    Convert JSON to see the table output
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <Table ref={tableRef} className="border border-collapse">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead
+                      className="border"
+                      colSpan={maxCol === 0 ? undefined : maxCol + 1}
+                    >
+                      Key
+                    </TableHead>
+                    <TableHead className="border">Type</TableHead>
+                    <TableHead className="border">Description</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>{table}</TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
