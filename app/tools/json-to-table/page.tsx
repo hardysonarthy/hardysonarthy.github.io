@@ -1,6 +1,10 @@
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 'use client';
 
+import { AlertCircle } from 'lucide-react';
 import { type ChangeEvent, useRef, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,8 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -18,20 +20,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+
+interface TableRowData {
+  name: string;
+  valueType: string;
+}
 
 export default function JsonToTable() {
-  const [rows, setRows] = useState([]);
-  const [table, setTable] = useState([]);
+  const [rows, setRows] = useState<TableRowData[]>([]);
+  const [table, setTable] = useState<React.JSX.Element[]>([]);
   const [maxCol, setMaxCol] = useState(0);
   const [enableConvert, setEnableConvert] = useState(false);
   const [jsonAlert, setJsonAlert] = useState(false);
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement>(null);
 
   let maxCount = 0;
 
-  function convertJson(jsonObj: object, nestCount = 0) {
+  function convertJson(
+    jsonObj: object,
+    nestCount = 0
+  ): { genRows: TableRowData[]; maxCount: number } {
     maxCount = maxCount > nestCount ? maxCount : nestCount;
     const genRows = [];
     for (const [key, value] of Object.entries(jsonObj)) {
@@ -89,7 +98,15 @@ export default function JsonToTable() {
     return { genRows, maxCount };
   }
 
-  function renderRow(row, parentName, level = 0) {
+  function renderRow(
+    row: {
+      child?: { genRows: []; maxCount: number };
+      name: string;
+      valueType: string;
+    },
+    parentName: string,
+    level = 0
+  ) {
     if (level === 0) {
       return (
         <TableRow className="border" key={`row-${row.name}`}>
@@ -138,13 +155,19 @@ export default function JsonToTable() {
   }
 
   function renderTable(
-    displayRows,
-    genRows: { child?: { genRows: []; maxCount: number }; name: string }[],
+    displayRows: React.JSX.Element[],
+    genRows: {
+      child?: { genRows: []; maxCount: number };
+      name: string;
+      valueType: string;
+    }[],
     parentName?: string,
     level = 0
   ) {
     for (const row of genRows) {
-      displayRows.push(renderRow(row, parentName, level));
+      if (parentName) {
+        displayRows.push(renderRow(row, parentName, level));
+      }
       if (row.child) {
         renderTable(displayRows, row.child.genRows, row.name, level + 1);
       }
@@ -153,13 +176,17 @@ export default function JsonToTable() {
 
   function onClick() {
     console.log('clicked');
-    const displayRows = [];
+    const displayRows: React.JSX.Element[] = [];
     renderTable(displayRows, rows);
     setTable(displayRows);
   }
 
   function copyTableHTML() {
-    const copiableTable = tableRef.current.innerHTML;
+    const copiableTable = tableRef.current?.innerHTML;
+    if (!copiableTable) {
+      console.log('failed to copy table html!');
+      return;
+    }
     navigator.clipboard.writeText(copiableTable);
   }
 
@@ -190,8 +217,8 @@ export default function JsonToTable() {
 
     // Remove any existing selections
     const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
 
     try {
       // Execute copy command: this copies the rendered fragment to clipboard
@@ -208,7 +235,7 @@ export default function JsonToTable() {
     }
 
     // Clear selection to clean up UI
-    selection.removeAllRanges();
+    selection?.removeAllRanges();
   }
 
   function onChange(event: ChangeEvent<HTMLTextAreaElement>) {

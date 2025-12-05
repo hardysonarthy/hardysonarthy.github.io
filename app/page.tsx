@@ -1,4 +1,4 @@
-import React from 'react';
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import {
   Card,
   CardContent,
@@ -44,7 +44,7 @@ export default function Page() {
           <span>Miri, Sarawak, Malaysia</span>
         </div>
 
-        <div className="text-justify mt-5">
+        {/* <div className="text-justify mt-5">
           A technology-driven software engineer with 7+ years of experience of
           designing, researching and developing diverse software solutions for
           various purposes, which grants the benefits of insight from the
@@ -54,11 +54,11 @@ export default function Page() {
           NoSQL databases. A technology enthusiast, always recommending and
           experimenting with new technology trends and developments to enhance
           software quality and development experience.
-        </div>
+        </div> */}
 
         <h1 className="text-xl mt-4 mb-2">Experience</h1>
-        <div className="grid grid-cols-1 gap-1">
-          <Card className="px-4 py-2 w-full">
+        <div className="grid grid-cols-1 gap-5">
+          <Card className="px-4 pt-5 w-full">
             <CardTitle>
               <div className="">Software Engineer II</div>
             </CardTitle>
@@ -98,7 +98,7 @@ export default function Page() {
             </CardContent>
           </Card>
 
-          <Card className="px-4 py-2  w-full">
+          <Card className="px-4 pt-5  w-full">
             <CardTitle>
               <div className="">IT Executive (Programmer)</div>
             </CardTitle>
@@ -129,7 +129,6 @@ export default function Page() {
           </Card>
         </div>
       </div>
-      <div>1</div>
     </div>
   );
 }
