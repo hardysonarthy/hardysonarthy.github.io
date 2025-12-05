@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
+import { Page } from 'tesseract.js';
 
 interface ProcessedImage {
   id: string;
@@ -49,7 +50,7 @@ export default function OCRApp() {
     setIsInitializing(true);
     try {
       const worker = await window.Tesseract.createWorker('eng', 1, {
-        logger: (m: Tesseract.RecognizeResult) => {
+        logger: (m: Tesseract.LoggerMessage) => {
           if (m.status === 'recognizing text') {
             const progress = Math.round(m.progress * 100);
             setImages((prev) =>
@@ -204,7 +205,7 @@ export default function OCRApp() {
       try {
         const {
           data: { text, confidence },
-        } = await workerRef.current.recognize(image.file, { jobId: image.id });
+        } = await workerRef.current.recognize(image.file, {}, {}, image.id);
 
         setImages((prev) =>
           prev.map((img) =>
