@@ -1,134 +1,232 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
+import {
+  Briefcase,
+  Calendar,
+  Cloud,
+  Code2,
+  Database,
+  MapPin,
+} from 'lucide-react';
+import { Badge } from './components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from './components/ui/card';
 
 export default function Page() {
   return (
-    <div className="mx-2 lg:mx-96 grid grid-rows-2 gap-4">
-      <div className="col-span-12 lg:col-span-12">
-        <h1 className="text-2xl">Hardyson Arthy anak Robin</h1>
-        <h2 className="text-xl">Software Engineer</h2>
-        <div className="flex gap-4 mt-4">
-          <span className="m-0 p-0">
-            <svg
-              width="20px"
-              height="20px"
-              role="img"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#e8e8e8"
-            >
-              <title>Location</title>
-              <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <g id="SVGRepo_iconCarrier">
-                {' '}
-                <path
-                  d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z"
-                  stroke="#e8e8e8"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />{' '}
-              </g>
-            </svg>
-          </span>
-          <span>Miri, Sarawak, Malaysia</span>
+    <div className="container mx-auto max-w-5xl px-4 py-8 space-y-12">
+      {/* Hero Section */}
+      <section className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Resume
+          </h1>
+          <div className="flex items-center gap-2 text-xl md:text-2xl text-muted-foreground">
+            <Code2 className="h-6 w-6" />
+            <span>Software Engineer</span>
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-5 w-5" />
+            <span>Kuala Lumpur, Malaysia</span>
+          </div>
         </div>
 
-        {/* <div className="text-justify mt-5">
-          A technology-driven software engineer with 7+ years of experience of
-          designing, researching and developing diverse software solutions for
-          various purposes, which grants the benefits of insight from the
-          multiple perspectives of different ends of software development.
-          Professional fluency in .NET C#, JavaScript, and Dart, with interest
-          in Rust and Golang, and possessing practical knowledge in SQL and
-          NoSQL databases. A technology enthusiast, always recommending and
-          experimenting with new technology trends and developments to enhance
-          software quality and development experience.
-        </div> */}
+        {/* Skills Overview */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Tech Stack</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary" className="text-sm">
+                TypeScript
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                Node.js
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                MongoDB
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                .NET C#
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                React
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                Docker
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                GCP
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                Flutter
+              </Badge>
+              <Badge variant="secondary" className="text-sm">
+                Kubernetes
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-        <h1 className="text-xl mt-4 mb-2">Experience</h1>
-        <div className="grid grid-cols-1 gap-5">
-          <Card className="px-4 pt-5 w-full">
-            <CardTitle>
-              <div className="">Software Engineer II</div>
-            </CardTitle>
-            <CardDescription>
-              <div className="w-full flex justify-between">
-                <div>MOVE Travel Sdn. Bhd.</div>
-                <div>
-                  <i>2022 - current</i>
+      {/* Experience Section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 mb-6">
+          <Briefcase className="h-6 w-6" />
+          <h2 className="text-3xl font-bold">Experience</h2>
+        </div>
+
+        <div className="space-y-6">
+          {/* Current Role */}
+          <Card className="border-l-4 border-l-primary">
+            <CardHeader>
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl">
+                    Software Engineer II
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    MOVE Travel Sdn. Bhd.
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span className="whitespace-nowrap">2022 - Present</span>
                 </div>
               </div>
-            </CardDescription>
-            <CardContent className="mt-4">
-              <ul className="list-disc description-list">
-                <li>
-                  Designed and maintained (MongoDB, Express, TypeScript,
-                  JavaScript) NodeJS backend microservices to serve frontend
-                  platforms (website and mobile app) via RESTful APIs for
-                  multiple lines of business.
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <ul className="space-y-3 text-sm md:text-base list-none">
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Designed and maintained{' '}
+                    <strong>NodeJS backend microservices</strong> (MongoDB,
+                    Express, TypeScript) serving frontend platforms via RESTful
+                    APIs for multiple business lines
+                  </span>
                 </li>
-                <li>
-                  Reducing risk of post-deployment bugs by integrating automated
-                  unit and end-to-end testing in the Gitlab CI/CD pipeline.
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Reduced post-deployment bugs by integrating{' '}
+                    <strong>automated testing</strong>
+                    (unit & end-to-end) in GitLab CI/CD pipeline
+                  </span>
                 </li>
-                <li>
-                  Deploying, maintaining and optimizing the architecture of
-                  services in Google Cloud Platform using Docker, Google
-                  Kubernetes Engine, Google Cloud Run and Kong via IaC and IaaS
-                  to ensure 99.9% uptime, while reducing -96% of total
-                  infrastructure costs compared to the legacy code.
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Deployed and optimized services on{' '}
+                    <strong>Google Cloud Platform</strong>
+                    using Docker, GKE, Cloud Run and Kong, achieving{' '}
+                    <strong>99.9% uptime</strong>
+                    and <strong>96% cost reduction</strong>
+                  </span>
                 </li>
-                <li>
-                  Tightly cooperating with multiple teams from various countries
-                  and backgrounds to ensure alignment of achievements and high
-                  quality product outcome.
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Collaborated with international teams across multiple
+                    countries to ensure alignment and high-quality deliverables
+                  </span>
                 </li>
               </ul>
+
+              <div className="pt-2 flex flex-wrap gap-2">
+                <Badge variant="outline" className="text-xs">
+                  <Database className="h-3 w-3 mr-1" />
+                  MongoDB
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  <Code2 className="h-3 w-3 mr-1" />
+                  TypeScript
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  <Cloud className="h-3 w-3 mr-1" />
+                  GCP
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  Docker
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  Kubernetes
+                </Badge>
+              </div>
             </CardContent>
           </Card>
 
-          <Card className="px-4 pt-5  w-full">
-            <CardTitle>
-              <div className="">IT Executive (Programmer)</div>
-            </CardTitle>
-            <CardDescription>
-              <div className="w-full flex justify-between">
-                <div>Emart Holdings Sdn. Bhd.</div>
-                <div>
-                  <i>2017 - 2022</i>
+          {/* Previous Role */}
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl">
+                    IT Executive (Programmer)
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Emart Holdings Sdn. Bhd.
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span className="whitespace-nowrap">2017 - 2022</span>
                 </div>
               </div>
-            </CardDescription>
-            <CardContent className="mt-4">
-              <ul className="list-disc description-list">
-                <li>
-                  Developed 10+ in-house web applications using .NET (C#),
-                  Microsoft IIS and MySQL/MariaDB, deployed to Microsoft Server.
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <ul className="space-y-3 text-sm md:text-base list-none">
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Developed <strong>10+ in-house web applications</strong>{' '}
+                    using .NET (C#), IIS and MySQL/MariaDB on Microsoft Server
+                  </span>
                 </li>
-                <li>
-                  Design, develop and maintain mobile applications for various
-                  logistics and retail loyalty purposes using Android SDK,
-                  Flutter and Firebase and integrations with in-house web
-                  applications and third party products, including dedicated
-                  hardware (PDAs) and IoT (Raspberry Pi)
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Built mobile applications for logistics and retail loyalty
+                    using
+                    <strong> Android SDK, Flutter and Firebase</strong>, with
+                    integrations to third-party products and IoT devices (PDAs,
+                    Raspberry Pi)
+                  </span>
                 </li>
-                <li>Mentor and guide junior programmers in the team</li>
+                <li className="flex gap-3">
+                  <span className="text-primary mt-1">▹</span>
+                  <span>
+                    Mentored and guided junior programmers on the development
+                    team
+                  </span>
+                </li>
               </ul>
+
+              <div className="pt-2 flex flex-wrap gap-2">
+                <Badge variant="outline" className="text-xs">
+                  .NET C#
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  Flutter
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  MySQL
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  Android SDK
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  IoT
+                </Badge>
+              </div>
             </CardContent>
           </Card>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

@@ -20,7 +20,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
-import { Page } from 'tesseract.js';
 
 interface ProcessedImage {
   id: string;
@@ -265,7 +264,7 @@ export default function OCRApp() {
   const copyToClipboard = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-    } catch (error) {
+    } catch (_error) {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;
@@ -343,7 +342,7 @@ export default function OCRApp() {
   const errorImages = images.filter((img) => img.status === 'error').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br p-1">
+    <div className="min-h-screen bg-linear-to-br p-1">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -408,8 +407,8 @@ export default function OCRApp() {
         {/* Upload Area */}
         <Card className="mb-3">
           <CardContent className="p-6">
-            {/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
-            {/** biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+            {/** biome-ignore lint/a11y/noStaticElementInteractions: for screenshot copypaste */}
+            {/** biome-ignore lint/a11y/useKeyWithClickEvents: for screenshot copypaste */}
             <div
               onDragOver={handleDragOver}
               onDrop={handleDrop}
@@ -502,12 +501,12 @@ export default function OCRApp() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center gap-2 truncate">
-                      <FileImage className="w-5 h-5 flex-shrink-0" />
+                      <FileImage className="w-5 h-5 shrink-0" />
                       <span className="truncate" title={image.file.name}>
                         {image.file.name}
                       </span>
                     </CardTitle>
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       {image.status === 'completed' && (
                         <Badge
                           variant="default"
@@ -541,6 +540,7 @@ export default function OCRApp() {
                 <CardContent className="space-y-4">
                   {/* Image Preview */}
                   <div className="relative">
+                    {/** biome-ignore lint/performance/noImgElement: exclusively for displaying image */}
                     <img
                       src={image.preview}
                       alt="Preview"
@@ -629,7 +629,7 @@ export default function OCRApp() {
                       <Textarea
                         value={image.text || 'No text detected'}
                         readOnly
-                        className="min-h-[120px] resize-none bg-gray-50"
+                        className="min-h-[120px] resize-none bg-card text-card-foreground border-border font-mono text-sm leading-relaxed"
                         placeholder="No text detected in this image"
                       />
                       {image.text && (
